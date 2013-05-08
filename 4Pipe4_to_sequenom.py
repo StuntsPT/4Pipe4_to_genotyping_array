@@ -39,9 +39,15 @@ def bam_miner(samfile, usable_snps, var_treshold):
     var_treshold = float(var_treshold)
 
     for contig,snps in usable_snps.items():
-        print contig, snps
-        #for pileupcolumn in infile.pileup(contig):
-            #print pileupcolumn
+        for snp in snps:
+            snp = int(re.match("(\d+)", snp).group())
+            seq_range = set(range(snp - 100, snp) + range(snp + 1, snp + 101))
+            for pileupcolumn in infile.pileup(contig):
+                if pileupcolumn.pos in seq_range:
+                    print "Change"
+                    for pileupread in pileupcolumn.pileups:
+                        print pileupread.alignment.seq[pileupread.qpos]
+                        #TODO: Change print to a counter
 
         #for ref in infile.references:
             #SNPs = {}
