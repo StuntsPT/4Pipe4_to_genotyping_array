@@ -64,6 +64,7 @@ def bam_miner(samfile, usable_snps, var_treshold):
             del selected_contigs[x]
     print len(selected_contigs)
     #TODO: Generate the Fastas and we're done!
+    #TODO: Something is wrong with the treshold!!!
 
 
 
