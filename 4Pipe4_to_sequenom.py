@@ -64,11 +64,8 @@ def bam_miner(samfile, usable_snps, var_treshold, max_variants):
     for x in list(selected_contigs.keys()):
         if selected_contigs[x] == []:
             del selected_contigs[x]
-    print len(selected_contigs)
-    #TODO: Generate the Fastas and we're done!
 
-
-
+    return selected_contigs
 
 def FASTA_miner(fdict):
     usable_snps = {}
@@ -89,6 +86,12 @@ def FASTA_miner(fdict):
                     usable_snps[contig] = [i]
     return usable_snps
 
+def FASTA_generator(fdict, selected_contigs):
+    for contig in usable_snps:
+        if contig in fdict:
+            print ">" + "contig"
+
 fdict = FASTAtoDict(argv[2])
 usable_snps = FASTA_miner(fdict)
-bam_miner(argv[1], usable_snps, argv[3], argv[4])
+selected_contigs = bam_miner(argv[1], usable_snps, argv[3], argv[4])
+FASTA_generator(fdict, selected_contigs)
