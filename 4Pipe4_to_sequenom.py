@@ -89,7 +89,7 @@ def FASTA_miner(fdict):
 def FASTA_generator(fdict, selected_contigs):
     for contig in usable_snps:
         if contig in fdict:
-            print ">" + "contig"
+            print ">" + "contig" #Nothing was printed. sounds like a bug.
 
 fdict = FASTAtoDict(argv[2])
 usable_snps = FASTA_miner(fdict)
