@@ -14,7 +14,7 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
 #
-#Usage: python2 4Pipe4_to_sequenom.py infile.bam infile.fasta variation_treshold(float: 0-1)
+#Usage: python2 4Pipe4_to_sequenom.py infile.bam infile.fasta variation_treshold(float: 0-1) max_variations(int)
 
 from __future__ import division
 import pysam
@@ -36,13 +36,14 @@ def FASTAtoDict(fasta_file):
     fasta.close()
     return Dict
 
-def bam_miner(samfile, usable_snps, var_treshold):
+def bam_miner(samfile, usable_snps, var_treshold, max_variants):
     infile = pysam.Samfile(samfile, "rb" )
     var_treshold = float(var_treshold)
     selected_contigs = usable_snps
 
     for contig,snps in usable_snps.items():
         for snp in snps:
+            count = 0
             snp_pos = int(re.match("(\d+)", snp).group())
             seq_range = set(range(snp_pos - 100, snp_pos) + range(snp_pos + 1, snp_pos + 101))
             for pileupcolumn in infile.pileup(contig):
@@ -55,7 +56,8 @@ def bam_miner(samfile, usable_snps, var_treshold):
                     most_frequent = max(raw_numbers)
                     var_rate = most_frequent / sum(raw_numbers)
                     if var_rate <= 1 - (var_treshold / 100):
-                        if snp in selected_contigs[contig]:
+                        count += 1
+                        if snp in selected_contigs[contig] and count >= (int(max_variants) + 1):
                             selected_contigs[contig].remove(snp)
 
     #Remove contigs with no SNPs:
@@ -64,7 +66,7 @@ def bam_miner(samfile, usable_snps, var_treshold):
             del selected_contigs[x]
     print len(selected_contigs)
     #TODO: Generate the Fastas and we're done!
-    #TODO: Something is wrong with the treshold!!!
+
 
 
 
@@ -89,4 +91,4 @@ def FASTA_miner(fdict):
 
 fdict = FASTAtoDict(argv[2])
 usable_snps = FASTA_miner(fdict)
-bam_miner(argv[1], usable_snps, argv[3])
+bam_miner(argv[1], usable_snps, argv[3], argv[4])
