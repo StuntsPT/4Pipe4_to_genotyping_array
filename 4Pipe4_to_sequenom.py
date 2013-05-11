@@ -38,6 +38,7 @@ def FASTAtoDict(fasta_file):
     return Dict
 
 def bam_miner(samfile, usable_snps, var_treshold, max_variants):
+    #This will mine the bam file in the SNP flanking region for variation
     infile = pysam.Samfile(samfile, "rb" )
     var_treshold = float(var_treshold)
     selected_contigs = usable_snps
@@ -69,6 +70,7 @@ def bam_miner(samfile, usable_snps, var_treshold, max_variants):
     return selected_contigs
 
 def FASTA_miner(fdict):
+    #This will gather the SNPs that match the minimum conditions
     usable_snps = {}
     for k,v in fdict.items():
         seq_len = len(v)
