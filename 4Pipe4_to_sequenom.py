@@ -32,7 +32,7 @@ def FASTAtoDict(fasta_file):
             name=lines.strip()
             Dict[name]= ''
         else:
-            Dict[name] = Dict[name] + lines.upper()
+            Dict[name] = Dict[name] + lines.upper().strip()
     fasta.close()
     return Dict
 
@@ -87,9 +87,14 @@ def FASTA_miner(fdict):
     return usable_snps
 
 def FASTA_generator(fdict, selected_contigs):
-    for contig in usable_snps:
-        if contig in fdict:
-            print ">" + "contig" #Nothing was printed. sounds like a bug.
+    for contig in fdict:
+        contig_name = re.match("^.*#", contig).group()[:-1]
+        if contig_name in selected_contigs:
+            print ">" + contig_name
+            for positions in selected_contigs[contig_name]:
+                bases = list(re.search("\D+", positions).group())
+                place = int(re.search("\d+", positions).group())
+                print fdict[contig][place - 100:place - 1] + "[" + "/".join(bases) + "]" + fdict[contig][place:place + 100]
 
 fdict = FASTAtoDict(argv[2])
 usable_snps = FASTA_miner(fdict)
