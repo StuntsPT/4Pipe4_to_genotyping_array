@@ -15,6 +15,7 @@
 #  MA 02110-1301, USA.
 #
 #Usage: python2 4Pipe4_to_sequenom.py infile.bam infile.fasta variation_treshold(float: 0-1) max_variations(int)
+#Output goes to stdout
 
 from __future__ import division
 import pysam
