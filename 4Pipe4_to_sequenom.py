@@ -98,6 +98,7 @@ def FASTA_generator(fdict, selected_contigs):
                 bases = list(re.search("\D+", positions).group())
                 place = int(re.search("\d+", positions).group())
                 print fdict[contig][place - 100:place - 1] + "[" + "/".join(bases) + "]" + fdict[contig][place:place + 100]
+                print "\n"
 
 fdict = FASTAtoDict(argv[2])
 usable_snps = FASTA_miner(fdict)
